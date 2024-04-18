@@ -61,20 +61,24 @@ class ExcelReader extends Component {
   }
 
   async dataUpdation(dataset) {
+    const newDataArray = []; // Array to store updated data objects
 
     for await (const data of dataset) {
-        for await (const keys of Object.keys(data)) {
-       if (this.isValidHttpUrl(data[keys])) {
-        await this.toDataUrl(data[keys]).then(res => {
-            console.log('res', res);
-            data[keys] = res;
-        })
+      const newData = { ...data }; // Clone the original data object
+      for await (const key of Object.keys(data)) {
+        if (this.isValidHttpUrl(data[key])) {
+          await this.toDataUrl(data[key]).then(res => {
+            newData[`base64URL_${key}`] = res; // Add the converted URL as a new property
+          });
         }
-        }
+      }
+      newDataArray.push(newData); // Push the updated object to the newDataArray
     }
-    return new Promise((resolve, reject) => {
-        resolve(dataset);
+
+    return new Promise((resolve) => {
+      resolve(newDataArray); // Resolve with the array of updated data objects
     });
+
   }
 
   async handleFile() {
