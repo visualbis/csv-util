@@ -3,6 +3,12 @@ import XLSX from 'xlsx';
 import { make_cols } from './MakeColumns';
 import { SheetJSFT } from './types';
 import * as FileSaver from 'file-saver';
+import './excelReader.css';
+import download from './icons/download-icon.svg'
+import warningIcon from './icons/warning-icon.svg'
+import errorIcon from './icons/error-icon.svg'
+
+
 
 class ExcelReader extends Component {
   constructor(props) {
@@ -11,6 +17,10 @@ class ExcelReader extends Component {
       file: {},
       data: [],
       cols: [],
+      showDownload: false,
+      warningList: [],
+      warningString: '',
+      isError: false
     };
     this.handleFile = this.handleFile.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -23,7 +33,8 @@ class ExcelReader extends Component {
     if(files && files[0] && acceptedFormats.includes(files[0].name.split('.').pop().toLowerCase())) {
         this.setState({ file: files[0] });
     } else {
-        throw new Error("File format not accepted");
+      this.setState({ isError: true })
+      // throw new Error("File format not accepted");
     }
   }
 
@@ -62,18 +73,30 @@ class ExcelReader extends Component {
 
   async dataUpdation(dataset) {
     const newDataArray = []; // Array to store updated data objects
-
+    let warning = []
+    let warningStr = '';
     for await (const data of dataset) {
       const newData = { ...data }; // Clone the original data object
       for await (const key of Object.keys(data)) {
         if (this.isValidHttpUrl(data[key])) {
           await this.toDataUrl(data[key]).then(res => {
             newData[`base64URL_${key}`] = res; // Add the converted URL as a new property
+            if (res.length * 3 / 4 < 23000) {
+              warning.push(data[key]);
+            }
           });
+
         }
       }
-      newDataArray.push(newData); // Push the updated object to the newDataArray
+      newDataArray.push(newData); // Push the updated object to the newDataArray  
     }
+
+    for (let i = 0; i < warning.length; i++) {
+      warningStr += `${warning[i]}\n`;
+    }
+
+    this.setState({ warningList: warning, warningString: warningStr });
+
 
     return new Promise((resolve) => {
       resolve(newDataArray); // Resolve with the array of updated data objects
@@ -98,13 +121,13 @@ class ExcelReader extends Component {
       const ws = wb.Sheets[wsname];
       /* Convert array of arrays */
       const data = XLSX.utils.sheet_to_json(ws);
-      console.log('this.state.file', this.state.file);
+      // console.log('this.state.file', this.state.file);
       var extension = this.state.file.name.split('.').pop().toLowerCase();
       /* Update state */
     this.dataUpdation(data).then(datum => {
-        console.log('datum', datum);
+        // console.log('datum', datum);
               this.setState({ data: datum, cols: make_cols(ws['!ref']) }, () => {
-        console.log(JSON.stringify(this.state.data, null, 2));
+        // console.log(JSON.stringify(this.state.data, null, 2));
        this.exportAsExcelFile(this.state.data, this.state.file.name, extension);
       });
     })
@@ -118,9 +141,9 @@ class ExcelReader extends Component {
   }
 
   exportAsExcelFile(json, excelFileName, extension) {
-    console.log(json);
+    // console.log(json);
     const worksheet = XLSX.utils.json_to_sheet(json);
-    console.log('worksheet', worksheet);
+    // console.log('worksheet', worksheet);
     const workbook = {
       Sheets: { data: worksheet },
       SheetNames: ['data'],
@@ -150,36 +173,46 @@ if(extension === 'csv') {
 
   render() {
     return (
-      <div style={{display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
-      width: '600px',
-      height: '600px'}}>
-        <div style={{padding: '20px'}}>
-        <input
-          type="file"
-          className="form-control"
-          id="file"
-        //   value="Upload"
-          accept={SheetJSFT}
-          onChange={this.handleChange}
-        />
+      <div className='main-icon-container' style={{
+      }}>
+        <div className='upload-outer'>
+          <input
+            type="file"
+            className="form-control"
+            id="upload-file"
+            accept={SheetJSFT}
+            onChange={this.handleChange}
+          />
+          <label htmlFor="upload-file" style={{
+            borderRadius: '20px', border: '2px solid var(--primaryText, #444)',
+            background: '#FCFCFC', padding: '5px 40px', fontFamily: "Azeret Mono", fontSize: '16px', fontStyle: 'normal',
+            fontWeight: '500', lineHeight: '13px', textAlign: 'center'
+          }}>Upload File</label>
+          <div class="error-container" style={{display: this.state.isError ? 'flex' : 'none'}}>
+            <img class="error-icon" src={errorIcon} />
+            <p class="error-text">Not Valid File Format</p>
+          </div>
         </div>
-<div style={{marginLeft: '200px'}}>
-        <input
-          type="submit"
-          value='Download'
-          onClick={this.handleFile}
-          style={{
-          background: '#039BE5',
-          width: '100px',
-          height: '40px',
-          borderRadius: '5px',
-          border: 'none',
-          color: 'white'}}
-        />
-</div>
+        <div className='download-component'>
+
+          <div style={{ display: this.state.showDownload ? 'block' : 'none' }} type="submit"
+            value='Download'
+            onClick={this.handleFile}>
+            <img src={download}></img>
+
+          </div>
+
+        </div>
+        <div className="warning-container" style={{
+          display: this.state.warningList.length > 0 ? 'flex' : 'none', color: 'var(--yellow-700, #B45309)',
+          fontFamily: "Noto Sans", fontSize: '14px', fontStyle: 'normal', fontWeight: '400', lineHeight: '20px'
+        }}>
+          <img className="warning-icon" src={warningIcon} alt="Warning Icon" />
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+          <p className="warning-text">Warning : The images exceed 23kb</p>
+          {this.state.warningList.length > 0 ? <p style={{ marginLeft: '10px', width:'25%', overflowY: 'scroll', border:'#FFCD3D 2px solid', height:'60px'}}>{this.state.warningString}</p> : null}
+        </div>
+      </div>
       </div>
     );
   }

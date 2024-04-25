@@ -24,6 +24,82 @@
   color: white;
 }
 
+.title-header{
+  background-color: #252525;
+  /* position: fixed; */
+}
+
+
+img.top-xvizLogo{
+  padding-top: 7px;
+  padding-bottom: 7px;
+  display: flex;
+  padding-left: 10%;
+}
+
+.footer{
+  position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #f5f5f5;
+    z-index: 1000;
+}
+
+img.bottom-xvizLogo {
+  padding-top: 7px;
+  padding-bottom: 7px;
+  display: flex;
+  padding-left: 10%;
+}
+
+.base64Title {
+  color: var(--dark-gray-icon, #444);
+  font-family: "Noto Sans";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 18px;
+  width: 300px;
+  height: 50px;
+  padding-left: 300px;
+  padding-top: 30px;
+  text-align: left;
+}
+
+.uploadTitle{
+  width: 350px;
+  text-align: left;
+  color: var(--dark-gray-icon, #444);
+  font-family: "Noto Sans";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 18px;
+  padding-left: 700px;
+  padding-top: 60px;
+}
+
+.user-guide {
+  width: 1079px;
+  height: 168px;
+  color: var(--midGray, #666);
+  text-align: left;
+  font-family: "Noto Sans";
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  padding-top: 25px;
+  padding-left: 150px;
+}
+
+.mid-component {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, #FFCD3D 0%, #FED364 35%, #FED885 63.5%, #FFCD3D 99.5%);
+  /* padding-bottom: 15%; */
+}
+
 .App-link {
   color: #61dafb;
 }
