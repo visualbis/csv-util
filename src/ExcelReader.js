@@ -29,9 +29,9 @@ class ExcelReader extends Component {
   handleChange(e) {
     const files = e.target.files;
     const acceptedFormats = [ 'csv', 'xlsx' ];
-    console.log('files', files);
+    // console.log('files', files);
     if(files && files[0] && acceptedFormats.includes(files[0].name.split('.').pop().toLowerCase())) {
-        this.setState({ file: files[0] });
+        this.setState({ file: files[0], showDownload:true, isError: false});
     } else {
       this.setState({ isError: true })
       // throw new Error("File format not accepted");
@@ -81,7 +81,7 @@ class ExcelReader extends Component {
         if (this.isValidHttpUrl(data[key])) {
           await this.toDataUrl(data[key]).then(res => {
             newData[`base64URL_${key}`] = res; // Add the converted URL as a new property
-            if (res.length * 3 / 4 < 23000) {
+            if (res.length * 3 / 4 > 23000) {
               warning.push(data[key]);
             }
           });
@@ -195,7 +195,7 @@ if(extension === 'csv') {
         </div>
         <div className='download-component'>
 
-          <div style={{ display: this.state.showDownload ? 'block' : 'none' }} type="submit"
+          <div style={{ display: this.state.showDownload && !this.state.isError ? 'block' : 'none' }} type="submit"
             value='Download'
             onClick={this.handleFile}>
             <img src={download}></img>
@@ -204,7 +204,7 @@ if(extension === 'csv') {
 
         </div>
         <div className="warning-container" style={{
-          display: this.state.warningList.length > 0 ? 'flex' : 'none', color: 'var(--yellow-700, #B45309)',
+          display: this.state.warningList.length > 0 && !this.state.isError ? 'flex' : 'none', color: 'var(--yellow-700, #B45309)',
           fontFamily: "Noto Sans", fontSize: '14px', fontStyle: 'normal', fontWeight: '400', lineHeight: '20px'
         }}>
           <img className="warning-icon" src={warningIcon} alt="Warning Icon" />
