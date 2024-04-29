@@ -1,9 +1,9 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "base64-util",
+  "name": "Excel & CSV File Convert to Base64",
   "icons": [
     {
-      "src": "favicon.ico",
+      "src": "xvizBG.ico",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/x-icon"
     },
@@ -16,6 +16,11 @@
       "src": "logo512.png",
       "type": "image/png",
       "sizes": "512x512"
+    },
+    {
+      "src": "bottom-xviz-icon.svg",
+      "sizes": "192x192",
+      "type": "image/svg"
     }
   ],
   "start_url": ".",
