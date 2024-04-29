@@ -28,7 +28,7 @@ function App() {
       <div className='user-guide'>
         <h2 style={{textAlign:'center'}}>Guide to use</h2>
         <ol>
-          <li>Upload a file (xIsx or csv) containing the list of your https links</li>
+          <li>Upload a file (xlsx or csv) containing the list of your https links</li>
           <li>Ensure to include a column header</li>
           <li>We recommend using images that have a file size of &lt;23 KB as individual image files. Otherwise, the Base 64 URL will be longer than the maximum characters that Power Bl can support.</li>
           <li>If you do have images  &gt;23KB, then refer to this hack to handle long Base64 URLS in your Power BI model.</li>
