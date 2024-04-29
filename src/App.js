@@ -8,7 +8,7 @@ function App() {
     <div className="App">
       <div className='mid-component'>
         <div className='title-header'>
-          <img className='top-xvizLogo' src={xvizLogoTop}></img>
+          <img className='top-xvizLogo' src={xvizLogoTop} alt="Top xViz Icon"></img>
         </div>
         <div>
           <div className='base64Title'>
@@ -37,7 +37,7 @@ function App() {
         </ol>
       </div>
       <div className='footer'>
-        <img className='bottom-xvizLogo' src={xvizLogoBottom}></img>
+        <img className='bottom-xvizLogo' src={xvizLogoBottom} alt="Bottom xviz Icon"></img>
 
       </div>
     </div>

@@ -189,7 +189,7 @@ if(extension === 'csv') {
             fontWeight: '500', lineHeight: '13px', textAlign: 'center'
           }}>Upload File</label>
           <div class="error-container" style={{display: this.state.isError ? 'flex' : 'none'}}>
-            <img class="error-icon" src={errorIcon} />
+            <img class="error-icon" src={errorIcon} alt="Error Icon" />
             <p class="error-text">Not Valid File Format</p>
           </div>
         </div>
@@ -198,7 +198,7 @@ if(extension === 'csv') {
           <div style={{ display: this.state.showDownload && !this.state.isError ? 'block' : 'none' }} type="submit"
             value='Download'
             onClick={this.handleFile}>
-            <img src={download}></img>
+            <img src={download} alt="Download Icon"></img>
 
           </div>
 
